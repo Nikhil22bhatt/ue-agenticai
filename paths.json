@@ -1,7 +1,0 @@
-{
-  "mappings": [
-    "/content/agenticai/:/",
-    "/content/agenticai/metadata:/metadata.json",
-    "/content/agenticai/configuration:/.helix/config.json"
-  ]
-}
