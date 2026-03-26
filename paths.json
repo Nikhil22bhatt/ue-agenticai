@@ -1,0 +1,9 @@
+{
+  "mappings": [
+    "/content/agentic-ai/:/",
+    "/content/agentic-ai/configuration:/.helix/config.json"
+  ],
+  "includes": [
+    "/content/agentic-ai/"
+  ]
+}
