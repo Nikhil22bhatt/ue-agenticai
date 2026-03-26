@@ -1,0 +1,31 @@
+{
+  "variantName": "carousel-news",
+  "baseBlock": "carousel",
+  "version": "1.0.0",
+  "created": "2026-03-25T16:46:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.tataelxsi.com/",
+    "originPage": "corporate homepage",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "compact",
+    "purpose": "news-carousel",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + paragraph + link",
+    "buttonCount": 0,
+    "imageCount": 6
+  },
+  "reuseGuidance": {
+    "suitableFor": ["news pages", "homepage news sections", "press release carousels"],
+    "notSuitableFor": ["product showcases", "image-only galleries"]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-25T16:46:00.000Z"
+  }
+}

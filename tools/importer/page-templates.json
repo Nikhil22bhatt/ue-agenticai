@@ -1,0 +1,131 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://www.tataelxsi.com/"
+      ],
+      "description": "Tata Elxsi corporate homepage with hero, services, news, and company information sections",
+      "blocks": [
+        {
+          "name": "carousel-news",
+          "instances": [
+            ".hmbaner.desk .hmbnrcrosl"
+          ]
+        },
+        {
+          "name": "cards-banner",
+          "instances": [
+            ".hmoverlbnr.hmlr2",
+            ".hmoverlbnr.hmlr3",
+            ".hmoverlbnr.hmlr4",
+            ".hmbaner2 .hmoverlbnr"
+          ]
+        },
+        {
+          "name": "cards-insights",
+          "instances": [
+            ".recogms2.botm2 .recoglst"
+          ]
+        },
+        {
+          "name": "carousel-showcase",
+          "instances": [
+            ".ftrdstorie2 .ftrdsres"
+          ]
+        },
+        {
+          "name": "cards-awards",
+          "instances": [
+            ".recogms2.recogms12 .recoglst"
+          ]
+        },
+        {
+          "name": "cards-values",
+          "instances": [
+            ".hmcrers2"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1",
+          "name": "News Banner",
+          "selector": "section#hmbanner",
+          "style": "dark",
+          "blocks": [
+            "carousel-news",
+            "cards-banner"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-2",
+          "name": "AI-First Design-Driven",
+          "selector": "section#hmservice",
+          "style": "dark",
+          "blocks": [
+            "cards-insights"
+          ],
+          "defaultContent": [
+            ".hmservce1 h3",
+            ".hmservce1 p"
+          ]
+        },
+        {
+          "id": "section-3",
+          "name": "Pioneering Possibilities",
+          "selector": "section#featureds",
+          "style": "dark",
+          "blocks": [
+            "carousel-showcase"
+          ],
+          "defaultContent": [
+            ".ftrdstorie1 h3",
+            ".ftrdstorie1 p"
+          ]
+        },
+        {
+          "id": "section-4",
+          "name": "Integrating Digital Technology And Design",
+          "selector": "section#technology",
+          "style": "dark",
+          "blocks": [],
+          "defaultContent": [
+            ".techlgy2 h1",
+            ".techlgy2 p",
+            ".techlgy1 a"
+          ]
+        },
+        {
+          "id": "section-5",
+          "name": "Recognized Excellence",
+          "selector": "section#recognition",
+          "style": "dark",
+          "blocks": [
+            "cards-awards"
+          ],
+          "defaultContent": [
+            ".recogms1 h3",
+            ".recogms1 p",
+            ".recogms1 a"
+          ]
+        },
+        {
+          "id": "section-6",
+          "name": "Careers - Home to A Billion",
+          "selector": "section#hmcarer",
+          "style": "dark",
+          "blocks": [
+            "cards-values"
+          ],
+          "defaultContent": [
+            ".hmcrers1 img",
+            ".hmcrers1 p",
+            ".hmcrers1 a"
+          ]
+        }
+      ]
+    }
+  ]
+}

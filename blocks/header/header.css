@@ -1,6 +1,6 @@
 /* header and nav layout */
 header .nav-wrapper {
-  background-color: var(--background-color);
+  background-color: #181724;
   width: 100%;
   z-index: 2;
   position: fixed;
@@ -68,7 +68,7 @@ header nav .nav-hamburger button {
   border: 0;
   border-radius: 0;
   padding: 0;
-  background-color: var(--background-color);
+  background-color: #181724;
   color: inherit;
   overflow: initial;
   text-overflow: initial;
@@ -241,9 +241,11 @@ header nav .nav-sections ul > li > ul > li {
     width: 200px;
     top: 150%;
     padding: 16px;
-    background-color: var(--light-color);
+    background-color: #1a1928;
     white-space: initial;
     z-index: 1;
+    border-radius: 8px;
+    border: 1px solid rgb(255 255 255 / 10%);
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul::before {
@@ -255,7 +257,7 @@ header nav .nav-sections ul > li > ul > li {
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--light-color);
+    border-bottom: 8px solid #1a1928;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
@@ -274,6 +276,21 @@ header nav .nav-tools .button {
   padding: 0.5em;
   background: none;
   line-height: 0;
+}
+
+header nav .nav-tools a {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--body-font-size-s);
+}
+
+/* Contact Us button - gradient border on last nav item */
+header nav .nav-sections .default-content-wrapper > ul > li:last-child a {
+  border: 1px solid;
+  border-image: linear-gradient(135deg, #00812c, #005c86, #071f9e) 1;
+  padding: 8px 20px;
+  font-size: var(--body-font-size-s);
 }
 
 /* breadcrumbs */

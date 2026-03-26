@@ -1,0 +1,31 @@
+{
+  "variantName": "cards-awards",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-25T16:46:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.tataelxsi.com/",
+    "originPage": "corporate homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "awards-recognition",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + link",
+    "buttonCount": 0,
+    "imageCount": 4
+  },
+  "reuseGuidance": {
+    "suitableFor": ["awards pages", "recognition sections", "achievement showcases"],
+    "notSuitableFor": ["product catalogs", "blog articles"]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-25T16:46:00.000Z"
+  }
+}

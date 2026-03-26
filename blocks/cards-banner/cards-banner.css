@@ -1,0 +1,80 @@
+/* Cards Banner - Overlay image cards with gradient */
+.cards-banner > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cards-banner > ul > li {
+  border: none;
+  border-radius: 10px;
+  background-color: var(--light-color);
+  overflow: hidden;
+  position: relative;
+  min-height: 180px;
+}
+
+/* Image fills the entire card as background */
+.cards-banner .cards-banner-card-image {
+  position: absolute;
+  inset: 0;
+  line-height: 0;
+}
+
+.cards-banner > ul > li img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Gradient overlay via ::after pseudo-element */
+.cards-banner > ul > li::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background:
+    linear-gradient(rgb(0 0 0 / 40%) 33%, transparent 100%),
+    linear-gradient(293deg, rgb(0 129 44 / 65%) 20%, rgb(0 92 134 / 65%) 48%, rgb(7 31 158 / 65%) 78%);
+  pointer-events: none;
+}
+
+/* Text overlaid on top of gradient */
+.cards-banner .cards-banner-card-body {
+  position: absolute;
+  inset: 0;
+  padding: 20px;
+  margin: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.cards-banner .cards-banner-card-body h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.cards-banner .cards-banner-card-body p {
+  font-size: 12px;
+  margin: 8px 0 0;
+  color: rgb(255 255 255 / 70%);
+  display: none;
+}
+
+@media (width >= 900px) {
+  .cards-banner,
+  .cards-banner > ul,
+  .cards-banner > ul > li {
+    height: 100%;
+  }
+
+  .cards-banner .cards-banner-card-body h3 {
+    font-size: 16px;
+  }
+}

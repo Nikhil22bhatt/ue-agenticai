@@ -1,0 +1,9 @@
+{
+  "type": "xwalk",
+  "libraryUrl": "https://main--sta-xwalk-boilerplate--aemysites.aem.page/tools/sidekick/library.json",
+  "contentHostUrl": "https://author-p178403-e1883757.adobeaemcloud.com/",
+  "aemSitePath": "/content/agentic-ai",
+  "aemAssetsFolderPath": "/content/dam/agentic-ai",
+  "aemSiteName": "agentic-ai",
+  "aemSiteTitle": "Agentic AI"
+}

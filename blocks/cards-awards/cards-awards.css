@@ -1,0 +1,71 @@
+/* Cards Awards - Recognition/award cards with title overlay */
+.cards-awards > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.cards-awards > ul > li {
+  border: none;
+  background-color: rgb(255 255 255 / 5%);
+  border-radius: var(--border-radius-m, 15px);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform var(--transition-base, 0.3s ease);
+}
+
+.cards-awards > ul > li:hover {
+  transform: translateY(-4px);
+}
+
+.cards-awards .cards-awards-card-image {
+  line-height: 0;
+}
+
+.cards-awards > ul > li img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.cards-awards .cards-awards-card-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 60%) 0%, transparent 100%);
+  z-index: 1;
+}
+
+.cards-awards .cards-awards-card-body h5 {
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.cards-awards .cards-awards-card-body p {
+  font-size: 13px;
+  opacity: 0.7;
+  margin: 8px 0 0;
+}
+
+@media (width >= 600px) {
+  .cards-awards > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .cards-awards > ul {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}

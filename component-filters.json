@@ -34,9 +34,45 @@
     ]
   },
   {
+    "id": "cards-awards",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "cards-banner",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "cards-insights",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "cards-values",
+    "components": [
+      "card"
+    ]
+  },
+  {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "carousel-news",
+    "components": [
+      "carousel-news-item"
+    ]
+  },
+  {
+    "id": "carousel-showcase",
+    "components": [
+      "carousel-showcase-item"
     ]
   },
   {

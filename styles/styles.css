@@ -1,41 +1,51 @@
 /*
- * Copyright 2020 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
+ * Tata Elxsi - Design System
+ * Migrated from https://www.tataelxsi.com/
  */
 
 :root {
   /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
-  --overlay-background-color:lightgrey;
+  --background-color: #0f0e17;
+  --light-color: #1a1928;
+  --dark-color: #0f0e17;
+  --text-color: #fff;
+  --text-color-muted: rgb(255 255 255 / 70%);
+  --link-color: #fff;
+  --link-hover-color: rgb(255 255 255 / 80%);
+  --overlay-background-color: rgb(0 0 0 / 40%);
+  --accent-color: #fff;
+  --border-color: rgb(255 255 255 / 20%);
 
   /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --body-font-family: "Noto Sans", noto-sans-fallback, sans-serif;
+  --heading-font-family: "Noto Sans", noto-sans-fallback, sans-serif;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+  --body-font-size-m: 16px;
+  --body-font-size-s: 14.4px;
+  --body-font-size-xs: 13px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 55px;
-  --heading-font-size-xl: 44px;
-  --heading-font-size-l: 34px;
-  --heading-font-size-m: 27px;
-  --heading-font-size-s: 24px;
-  --heading-font-size-xs: 22px;
+  --heading-font-size-xxl: 36px;
+  --heading-font-size-xl: 28.8px;
+  --heading-font-size-l: 28.8px;
+  --heading-font-size-m: 22px;
+  --heading-font-size-s: 16px;
+  --heading-font-size-xs: 14px;
+
+  /* spacing */
+  --section-padding: 60px 0;
+  --content-max-width: 1200px;
+  --content-padding: 0 24px;
+
+  /* border radius */
+  --border-radius-s: 8px;
+  --border-radius-m: 15px;
+  --border-radius-l: 20px;
+
+  /* transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
 
   /* nav heights */
   --nav-height: 64px;
@@ -45,31 +55,19 @@
 
 /* fallback fonts */
 @font-face {
-  font-family: roboto-condensed-fallback;
-  size-adjust: 88.82%;
-  src: local('Arial');
-}
-
-@font-face {
-  font-family: roboto-fallback;
-  size-adjust: 99.529%;
+  font-family: noto-sans-fallback;
+  size-adjust: 100%;
   src: local('Arial');
 }
 
 @media (width >= 900px) {
   :root {
-    /* body sizes */
-    --body-font-size-m: 18px;
-    --body-font-size-s: 16px;
-    --body-font-size-xs: 14px;
-
-    /* heading sizes */
-    --heading-font-size-xxl: 45px;
+    --heading-font-size-xxl: 42px;
     --heading-font-size-xl: 36px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
+    --heading-font-size-l: 28.8px;
+    --heading-font-size-m: 24px;
+    --heading-font-size-s: 16px;
+    --heading-font-size-xs: 14px;
   }
 }
 
@@ -80,7 +78,7 @@ body {
   color: var(--text-color);
   font-family: var(--body-font-family);
   font-size: var(--body-font-size-m);
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 body.appear {
@@ -116,8 +114,8 @@ h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 700;
+  line-height: 1.1;
   scroll-margin: 40px;
 }
 
@@ -125,7 +123,12 @@ h1 { font-size: var(--heading-font-size-xxl); }
 h2 { font-size: var(--heading-font-size-xl); }
 h3 { font-size: var(--heading-font-size-l); }
 h4 { font-size: var(--heading-font-size-m); }
-h5 { font-size: var(--heading-font-size-s); }
+
+h5 {
+  font-size: var(--heading-font-size-s);
+  font-weight: 600;
+}
+
 h6 { font-size: var(--heading-font-size-xs); }
 
 p,
@@ -138,6 +141,13 @@ blockquote {
   margin-bottom: 0.25em;
 }
 
+p {
+  font-size: var(--body-font-size-s);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--text-color-muted);
+}
+
 code,
 pre {
   font-size: var(--body-font-size-s);
@@ -145,7 +155,7 @@ pre {
 
 pre {
   padding: 16px;
-  border-radius: 8px;
+  border-radius: var(--border-radius-s);
   background-color: var(--light-color);
   overflow-x: auto;
   white-space: pre;
@@ -167,11 +177,12 @@ a:any-link {
   color: var(--link-color);
   text-decoration: none;
   overflow-wrap: break-word;
+  transition: opacity var(--transition-base);
 }
 
 a:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
+  opacity: 0.8;
+  text-decoration: none;
 }
 
 /* buttons */
@@ -181,28 +192,32 @@ button {
   display: inline-block;
   max-width: 100%;
   margin: 12px 0;
-  border: 2px solid transparent;
-  border-radius: 2.4em;
-  padding: 0.5em 1.2em;
+  border: 2px solid var(--accent-color);
+  border-radius: var(--border-radius-m);
+  padding: 10px 40px 10px 16px;
   font-family: var(--body-font-family);
   font-style: normal;
-  font-weight: 500;
-  line-height: 1.25;
+  font-weight: 400;
+  font-size: var(--body-font-size-m);
+  line-height: 1.4;
   text-align: center;
   text-decoration: none;
-  background-color: var(--link-color);
-  color: var(--background-color);
+  text-transform: capitalize;
+  background-color: transparent;
+  color: var(--accent-color);
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 a.button:hover,
 a.button:focus,
 button:hover,
 button:focus {
-  background-color: var(--link-hover-color);
+  background-color: var(--accent-color);
+  color: var(--background-color);
   cursor: pointer;
 }
 
@@ -238,17 +253,19 @@ main img {
 
 /* sections */
 main > .section {
-  margin: 40px 0;
+  margin: 0;
+  padding: 40px var(--content-padding);
 }
 
 main > .section > div {
-  max-width: 1200px;
+  max-width: var(--content-max-width);
   margin: auto;
-  padding: 0 24px;
+  padding: var(--content-padding);
 }
 
 main > .section:first-of-type {
   margin-top: 0;
+  padding-top: 0;
 }
 
 @media (width >= 900px) {
@@ -257,10 +274,511 @@ main > .section:first-of-type {
   }
 }
 
-/* section metadata */
+/* section metadata - dark variant (primary for Tata Elxsi) */
+main .section.dark {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: var(--section-padding);
+}
+
+main .section.dark h1,
+main .section.dark h2,
+main .section.dark h3,
+main .section.dark h4,
+main .section.dark h5,
+main .section.dark h6 {
+  color: var(--text-color);
+}
+
+main .section.dark p {
+  color: var(--text-color-muted);
+}
+
+main .section.dark a:any-link {
+  color: var(--link-color);
+}
+
+/* section metadata - light variant */
 main .section.light,
 main .section.highlight {
-  background-color: var(--light-color);
+  background-color: #f8f8f8;
+  color: #131313;
   margin: 0;
-  padding: 40px 0;
+  padding: var(--section-padding);
+}
+
+main .section.light h1,
+main .section.light h2,
+main .section.light h3,
+main .section.light h4,
+main .section.light h5,
+main .section.light h6 {
+  color: #131313;
+}
+
+main .section.light p {
+  color: #505050;
+}
+
+main .section.light a:any-link {
+  color: #131313;
+}
+
+main .section.light a.button:any-link {
+  border-color: #131313;
+  color: #131313;
+}
+
+main .section.light a.button:hover {
+  background-color: #131313;
+  color: #fff;
+}
+
+/* ========================================
+ * Section 1: News Banner Grid Layout
+ * Carousel + 4 banner cards in composite grid
+ * Original: carousel top-left, healthcare top-center,
+ * GSMA right spanning both rows, Q3 bottom-left, Bayer bottom-center
+ * ======================================== */
+@media (width >= 900px) {
+  main > .section:has(.carousel-news-wrapper) > .carousel-news-wrapper,
+  main > .section:has(.carousel-news-wrapper) > .cards-banner-wrapper,
+  main > .section:has(.carousel-news-wrapper) > .default-content-wrapper {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main > .section:has(.carousel-news-wrapper) {
+    display: grid;
+    grid-template-columns: 50% 1fr 1fr;
+    grid-template-rows: 310px 210px;
+    gap: 10px;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* Carousel: top-left */
+  main > .section:has(.carousel-news-wrapper) > .carousel-news-wrapper {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  /* Force carousel to fill its grid cell exactly */
+  main > .section:has(.carousel-news-wrapper) .carousel-news,
+  main > .section:has(.carousel-news-wrapper) .carousel-news-slides-container,
+  main > .section:has(.carousel-news-wrapper) .carousel-news-slides {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  main > .section:has(.carousel-news-wrapper) .carousel-news .carousel-news-slide {
+    min-height: unset;
+    height: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Move slide indicators inside the carousel overlay */
+  main > .section:has(.carousel-news-wrapper) .carousel-news .carousel-news-slide-indicators {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+  }
+
+  main > .section:has(.carousel-news-wrapper) .carousel-news .carousel-news-slide-content {
+    --slide-content-width: calc(100% - 48px);
+
+    margin: 20px 24px;
+  }
+
+  /* Hide description in compact hero carousel */
+  main > .section:has(.carousel-news-wrapper) .carousel-news .carousel-news-slide-content p {
+    display: none;
+  }
+
+  /* Card 1 (Healthcare): top-center */
+  main > .section:has(.carousel-news-wrapper) > .cards-banner-wrapper:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  /* Card 2 (Q3): bottom-left */
+  main > .section:has(.carousel-news-wrapper) > .cards-banner-wrapper:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  /* Card 3 (Bayer): bottom-center */
+  main > .section:has(.carousel-news-wrapper) > .cards-banner-wrapper:nth-child(4) {
+    grid-column: 2;
+    grid-row: 2;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  /* Card 4 (GSMA): right column, spanning both rows (tall) */
+  main > .section:has(.carousel-news-wrapper) > .cards-banner-wrapper:nth-child(5) {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  main > .section:has(.carousel-news-wrapper) > .default-content-wrapper {
+    display: none;
+  }
+}
+
+/* ========================================
+ * Section 2: Insights Layout
+ * Heading left + 3 cards right
+ * ======================================== */
+@media (width >= 900px) {
+  main > .section.cards-insights-container:not(:has(.carousel-news-wrapper)) > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main > .section.cards-insights-container:not(:has(.carousel-news-wrapper)) {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: start;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  main > .section.cards-insights-container:not(:has(.carousel-news-wrapper)) > .default-content-wrapper {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+/* Override button style for "read more" text links inside insight cards */
+/* stylelint-disable-next-line no-descending-specificity */
+.cards-insights .cards-insights-card-body a.button:any-link {
+  display: inline;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: lowercase;
+  background: none;
+  color: #fff;
+  border-radius: 0;
+  white-space: normal;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.cards-insights .cards-insights-card-body a.button:hover {
+  background: none;
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Override button style for showcase carousel links */
+/* stylelint-disable-next-line no-descending-specificity */
+.carousel-showcase a.button:any-link {
+  display: inline;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: none;
+  background: none;
+  color: #fff;
+  opacity: 0.8;
+  border-radius: 0;
+  white-space: normal;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.carousel-showcase a.button:hover {
+  background: none;
+  color: #fff;
+  opacity: 1;
+}
+
+/* ========================================
+ * Section 3: Showcase Layout
+ * Heading left + carousel cards right
+ * ======================================== */
+@media (width >= 900px) {
+  main > .section.carousel-showcase-container > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main > .section.carousel-showcase-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: start;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  main > .section.carousel-showcase-container > .default-content-wrapper {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+/* ========================================
+ * Section 4: Video Banner - Full Width Layout
+ * Full-width image with play button overlay,
+ * heading and text below
+ * ======================================== */
+main > .section.video-banner {
+  padding: 0;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+main > .section.video-banner > .default-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Building image - full width, row 1 */
+main > .section.video-banner .default-content-wrapper > p:nth-of-type(2) {
+  grid-row: 1;
+  grid-column: 1;
+  margin: 0;
+  line-height: 0;
+}
+
+main > .section.video-banner .default-content-wrapper > p:nth-of-type(2) img {
+  width: 100%;
+  display: block;
+}
+
+/* Play button - overlaid centered on image, same grid cell */
+main > .section.video-banner .default-content-wrapper > p:nth-of-type(3) {
+  grid-row: 1;
+  grid-column: 1;
+  place-self: center;
+  z-index: 2;
+  margin: 0;
+}
+
+main > .section.video-banner .default-content-wrapper > p:nth-of-type(3) img {
+  width: 60px;
+  height: 60px;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+}
+
+main > .section.video-banner .default-content-wrapper > p:nth-of-type(3):hover img {
+  opacity: 1;
+}
+
+/* Heading - below image */
+main > .section.video-banner .default-content-wrapper > h1 {
+  grid-row: 2;
+  grid-column: 1;
+  padding: 24px 24px 0;
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Description - below heading */
+main > .section.video-banner .default-content-wrapper > p:first-of-type {
+  grid-row: 3;
+  grid-column: 1;
+  padding: 0 24px 24px;
+}
+
+@media (width >= 900px) {
+  main > .section.video-banner > .default-content-wrapper {
+    grid-template-columns: 1fr 1.5fr;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+  }
+
+  /* Image spans both columns */
+  main > .section.video-banner .default-content-wrapper > p:nth-of-type(2) {
+    grid-column: 1 / -1;
+  }
+
+  /* Play button spans both columns */
+  main > .section.video-banner .default-content-wrapper > p:nth-of-type(3) {
+    grid-column: 1 / -1;
+  }
+
+  /* Heading in left column */
+  main > .section.video-banner .default-content-wrapper > h1 {
+    grid-row: 2;
+    grid-column: 1;
+    font-size: 32px;
+    padding: 32px 32px 16px;
+  }
+
+  /* Description in right column, same row */
+  main > .section.video-banner .default-content-wrapper > p:first-of-type {
+    grid-row: 2;
+    grid-column: 2;
+    padding: 32px 32px 16px;
+  }
+}
+
+/* ========================================
+ * Section 6: Values Section Layout
+ * Heading + text left, 2x2 value cards right
+ * ======================================== */
+@media (width >= 900px) {
+  main > .section.cards-values-container > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main > .section.cards-values-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  /* Text stays in left column */
+  main > .section.cards-values-container > .default-content-wrapper:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Cards go to right column */
+  main > .section.cards-values-container > .cards-values-wrapper {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Hide trailing empty wrapper */
+  main > .section.cards-values-container > .default-content-wrapper:last-child {
+    display: none;
+  }
+
+  /* Force 2x2 grid in this layout */
+  main > .section.cards-values-container .cards-values > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========================================
+ * Section 5: Recognized Excellence Layout
+ * Heading left + 4 award cards right
+ * ======================================== */
+@media (width >= 900px) {
+  main > .section.cards-awards-container > div {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  main > .section.cards-awards-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: start;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 60px 32px;
+  }
+
+  main > .section.cards-awards-container > .default-content-wrapper {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+/* ========================================
+ * "View All" button in awards section — text link style
+ * ======================================== */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.cards-awards-container .default-content-wrapper a.button[href*="awards"]:any-link {
+  display: inline-block;
+  border: 2px solid #fff;
+  border-radius: 15px;
+  padding: 11px 55px 11px 17px;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: capitalize;
+  background: none;
+  color: #fff;
+  position: relative;
+}
+
+.section.cards-awards-container .default-content-wrapper a.button[href*="awards"]::after {
+  content: "\2192";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform var(--transition-base);
+}
+
+.section.cards-awards-container .default-content-wrapper a.button[href*="awards"]:hover::after {
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ========================================
+ * "Know More" button with arrow icon
+ * ======================================== */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.cards-values-container .default-content-wrapper a.button:any-link {
+  display: inline-block;
+  border: 2px solid #fff;
+  border-radius: 15px;
+  padding: 10px 45px 10px 15px;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: capitalize;
+  background: none;
+  color: #fff;
+  position: relative;
+}
+
+.section.cards-values-container .default-content-wrapper a.button::after {
+  content: "\2192";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform var(--transition-base);
+}
+
+.section.cards-values-container .default-content-wrapper a.button:hover::after {
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ========================================
+ * Section heading typography (match original)
+ * ======================================== */
+main > .section > .default-content-wrapper > h3 {
+  font-weight: 400;
+  line-height: 1.1;
 }

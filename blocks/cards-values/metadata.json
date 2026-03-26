@@ -1,0 +1,31 @@
+{
+  "variantName": "cards-values",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-25T16:46:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.tataelxsi.com/",
+    "originPage": "corporate homepage",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "minimal",
+    "purpose": "value-propositions",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "image + heading",
+    "buttonCount": 0,
+    "imageCount": 4
+  },
+  "reuseGuidance": {
+    "suitableFor": ["value proposition sections", "company culture pages", "icon-based feature lists"],
+    "notSuitableFor": ["image-heavy galleries", "blog articles"]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-25T16:46:00.000Z"
+  }
+}

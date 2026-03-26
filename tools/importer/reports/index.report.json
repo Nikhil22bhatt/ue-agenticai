@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "url": "https://www.tataelxsi.com/",
+  "path": "index",
+  "timestamp": "2026-03-25T17:44:44.174Z",
+  "title": "Tata Elxsi - Integrating Digital Technology and Design",
+  "template": "homepage",
+  "blocks": [
+    "carousel-news",
+    "cards-banner",
+    "cards-banner",
+    "cards-banner",
+    "cards-banner",
+    "cards-insights",
+    "cards-insights",
+    "carousel-showcase",
+    "cards-awards",
+    "cards-values"
+  ]
+}

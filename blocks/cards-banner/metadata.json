@@ -1,0 +1,31 @@
+{
+  "variantName": "cards-banner",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-25T16:46:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.tataelxsi.com/",
+    "originPage": "corporate homepage",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "compact",
+    "purpose": "news-banner-cards",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + heading + paragraph + link",
+    "buttonCount": 0,
+    "imageCount": 4
+  },
+  "reuseGuidance": {
+    "suitableFor": ["homepage banner sections", "featured news grids", "press release highlights"],
+    "notSuitableFor": ["product catalogs", "icon-based feature lists"]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-25T16:46:00.000Z"
+  }
+}

@@ -1,0 +1,53 @@
+/* Cards Values - Company value propositions with icons */
+.cards-values > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.cards-values > ul > li {
+  border: 1px solid rgb(255 255 255 / 10%);
+  background-color: rgb(255 255 255 / 5%);
+  border-radius: var(--border-radius-s, 8px);
+  padding: 24px;
+  text-align: center;
+  transition: background-color var(--transition-base, 0.3s ease);
+}
+
+.cards-values > ul > li:hover {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+.cards-values .cards-values-card-image {
+  line-height: 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.cards-values > ul > li img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
+.cards-values .cards-values-card-body {
+  margin: 0;
+}
+
+.cards-values .cards-values-card-body h5 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+@media (width >= 900px) {
+  .cards-values > ul {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}

@@ -1,0 +1,118 @@
+/* Carousel Showcase - Horizontal scroll case studies */
+.carousel-showcase .carousel-showcase-slides-container {
+  position: relative;
+}
+
+.carousel-showcase .carousel-showcase-slides,
+.carousel-showcase .carousel-showcase-slide-indicators {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-showcase .carousel-showcase-slides {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  padding: 0 0 16px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.carousel-showcase .carousel-showcase-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-showcase .carousel-showcase-slide {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+  position: relative;
+  border-radius: var(--border-radius-s, 8px);
+  overflow: hidden;
+  min-height: 280px;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-image {
+  position: absolute;
+  inset: 0;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-image picture,
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-image p {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-image picture > img,
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-image p > img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 280px;
+  padding: 20px;
+  background: linear-gradient(to top, rgb(0 0 0 / 70%) 0%, transparent 60%);
+  color: white;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-content p {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-content a {
+  color: white;
+  font-size: 13px;
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-content a:hover {
+  opacity: 1;
+}
+
+/* Hide indicators and nav buttons for horizontal scroll mode */
+.carousel-showcase .carousel-showcase-slide-indicators {
+  display: none;
+}
+
+.carousel-showcase .carousel-showcase-navigation-buttons {
+  display: none;
+}
+
+@media (width >= 600px) {
+  .carousel-showcase .carousel-showcase-slide {
+    flex: 0 0 320px;
+    min-height: 320px;
+  }
+
+  .carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-content {
+    min-height: 320px;
+  }
+}
+
+@media (width >= 900px) {
+  .carousel-showcase .carousel-showcase-slides {
+    gap: 20px;
+  }
+
+  .carousel-showcase .carousel-showcase-slide {
+    flex: 0 0 350px;
+    min-height: 350px;
+  }
+
+  .carousel-showcase .carousel-showcase-slide .carousel-showcase-slide-content {
+    min-height: 350px;
+  }
+}

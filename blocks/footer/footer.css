@@ -1,20 +1,99 @@
+/* Footer - Tata Elxsi dark theme */
 footer {
-  background-color: var(--light-color);
+  background-color: var(--background-color);
+  color: #fff;
   font-size: var(--body-font-size-xs);
 }
 
 footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
+  margin: 0;
+  max-width: none;
+  padding: 0;
 }
 
-footer .footer p {
+/* "Reimagining the Future" heading section */
+footer .footer .default-content-wrapper h3 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
   margin: 0;
+  padding: 60px 24px;
+  background: linear-gradient(135deg, #06c 0%, #00b4d8 50%, #48cae4 100%);
+}
+
+/* Bottom bar with legal links and social */
+footer .footer .default-content-wrapper ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Legal links row */
+footer .footer .default-content-wrapper ul:first-of-type {
+  padding: 16px 32px;
+  flex-wrap: wrap;
+}
+
+footer .footer .default-content-wrapper ul:first-of-type li {
+  font-size: 14px;
+  color: rgb(255 255 255 / 80%);
+}
+
+footer .footer .default-content-wrapper ul:first-of-type li:not(:last-child)::after {
+  content: '|';
+  margin-left: 8px;
+  color: rgb(255 255 255 / 40%);
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+footer .footer .default-content-wrapper ul:first-of-type a {
+  color: rgb(255 255 255 / 80%);
+  text-decoration: none;
+}
+
+footer .footer .default-content-wrapper ul:first-of-type a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Social links row */
+footer .footer .default-content-wrapper ul:last-of-type {
+  padding: 0 32px 16px;
+  gap: 16px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+footer .footer .default-content-wrapper ul:last-of-type a {
+  color: rgb(255 255 255 / 80%);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+footer .footer .default-content-wrapper ul:last-of-type a:hover {
+  color: #fff;
 }
 
 @media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
+  footer .footer .default-content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  footer .footer .default-content-wrapper h3 {
+    width: 100%;
+    font-size: 48px;
+    padding: 80px 32px;
+  }
+
+  footer .footer .default-content-wrapper ul:first-of-type {
+    flex: 1;
+  }
+
+  footer .footer .default-content-wrapper ul:last-of-type {
+    padding: 16px 32px;
+    justify-content: flex-end;
   }
 }

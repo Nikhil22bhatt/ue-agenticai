@@ -1,0 +1,31 @@
+{
+  "variantName": "carousel-showcase",
+  "baseBlock": "carousel",
+  "version": "1.0.0",
+  "created": "2026-03-25T16:46:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.tataelxsi.com/",
+    "originPage": "corporate homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "minimal",
+    "purpose": "case-study-showcase",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + link",
+    "buttonCount": 0,
+    "imageCount": 8
+  },
+  "reuseGuidance": {
+    "suitableFor": ["case study pages", "portfolio showcases", "project galleries"],
+    "notSuitableFor": ["text-heavy carousels", "news carousels with descriptions"]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-25T16:46:00.000Z"
+  }
+}

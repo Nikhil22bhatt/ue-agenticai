@@ -1,0 +1,184 @@
+/* Carousel News - Tata Elxsi hero news carousel */
+.carousel-news .carousel-news-slides-container {
+  position: relative;
+}
+
+.carousel-news .carousel-news-slides,
+.carousel-news .carousel-news-slide-indicators {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-news .carousel-news-slides {
+  display: flex;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overflow: scroll clip;
+}
+
+.carousel-news .carousel-news-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-news .carousel-news-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  position: relative;
+  width: 100%;
+  min-height: min(60vw, 400px);
+}
+
+/* Gradient overlay on carousel slides */
+.carousel-news .carousel-news-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgb(0 0 0 / 40%) 33%, transparent 100%),
+    linear-gradient(293deg, rgb(0 129 44 / 55%) 20%, rgb(0 92 134 / 55%) 48%, rgb(7 31 158 / 55%) 78%);
+  pointer-events: none;
+}
+
+.carousel-news {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-news .carousel-news-slide .carousel-news-slide-image {
+  position: absolute;
+  inset: 0;
+  line-height: 0;
+}
+
+.carousel-news .carousel-news-slide .carousel-news-slide-image picture {
+  position: absolute;
+  inset: 0;
+}
+
+.carousel-news .carousel-news-slide .carousel-news-slide-image img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.carousel-news .carousel-news-slide .carousel-news-slide-content {
+  z-index: 2;
+  margin: 24px;
+  padding: 20px;
+  color: #fff;
+  background: none;
+  position: relative;
+  width: var(--slide-content-width, auto);
+}
+
+.carousel-news .carousel-news-slide .carousel-news-slide-content h3 {
+  font-size: 18px;
+  margin-top: 0;
+  line-height: 1.3;
+}
+
+.carousel-news .carousel-news-slide .carousel-news-slide-content p {
+  font-size: 13px;
+  color: rgb(255 255 255 / 80%);
+  margin-bottom: 0;
+}
+
+.carousel-news .carousel-news-slide-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  padding: 12px;
+  line-height: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.carousel-news .carousel-news-slide-indicator button {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  background-color: rgb(255 255 255 / 30%);
+  transition: background-color var(--transition-base);
+}
+
+.carousel-news .carousel-news-slide-indicator button:disabled,
+.carousel-news .carousel-news-slide-indicator button:hover,
+.carousel-news .carousel-news-slide-indicator button:focus-visible {
+  background-color: #fff;
+}
+
+.carousel-news .carousel-news-navigation-buttons {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.carousel-news .carousel-news-navigation-buttons button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  background-color: rgb(0 0 0 / 30%);
+  transition: background-color var(--transition-base);
+}
+
+.carousel-news .carousel-news-navigation-buttons button:hover,
+.carousel-news .carousel-news-navigation-buttons button:focus-visible {
+  background-color: rgb(0 0 0 / 60%);
+}
+
+.carousel-news .carousel-news-navigation-buttons button::after {
+  display: block;
+  content: '';
+  border: 2px solid #fff;
+  border-bottom: 0;
+  border-left: 0;
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 2px);
+  transform: translate(-50%, -50%) rotate(-135deg);
+}
+
+.carousel-news .carousel-news-navigation-buttons button.slide-next::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+  left: calc(50% - 2px);
+}
+
+@media (width >= 600px) {
+  .carousel-news .carousel-news-slide {
+    min-height: min(50vw, 550px);
+  }
+
+  .carousel-news .carousel-news-navigation-buttons {
+    left: 24px;
+    right: 24px;
+  }
+
+  .carousel-news .carousel-news-slide .carousel-news-slide-content {
+    --slide-content-width: calc((100% - 120px) / 2);
+
+    margin: 40px 60px;
+  }
+}
