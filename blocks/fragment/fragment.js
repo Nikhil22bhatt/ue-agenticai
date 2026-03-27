@@ -55,7 +55,6 @@ function extractPath(block) {
 
   // Method 2: All text content — look for a path pattern
   const allText = block.textContent.trim();
-  // Match /content/dam/... or /Content/Dam/... pattern anywhere in text
   const match = allText.match(/(\/[Cc]ontent\/[Dd]am\/[^\s]+)/);
   if (match) return match[1];
 
@@ -81,13 +80,11 @@ function extractPath(block) {
 function normalizePath(rawPath) {
   if (!rawPath) return null;
   let p = rawPath.trim();
-  // Fix common UE capitalizations
   p = p.replace(/\/Content\//g, '/content/');
   p = p.replace(/\/Dam\//g, '/dam/');
   p = p.replace(/\/Agentic-Ai\//g, '/agentic-ai/');
   p = p.replace(/\/En\//g, '/en/');
   p = p.replace(/\/Fr\//g, '/fr/');
-  // Remove any trailing whitespace or newlines
   p = p.replace(/\s+/g, '').trim();
   return p;
 }
@@ -97,13 +94,9 @@ function normalizePath(rawPath) {
  */
 function getAemBase() {
   const { hostname, protocol } = window.location;
-  // Inside Universal Editor — the page is served from the author domain
   if (hostname.includes('adobeaemcloud.com')) {
-    // Extract the author hostname from the UE URL
-    // UE URL pattern: author-pXXXX-eXXXX.adobeaemcloud.com
     return `${protocol}//${hostname}`;
   }
-  // Fallback for EDS preview/live
   return 'https://author-p178403-e1883757.adobeaemcloud.com';
 }
 
@@ -112,7 +105,10 @@ function getAemBase() {
  */
 async function fetchContentFragment(path) {
   const aemBase = getAemBase();
-  const apiUrl = `${aemBase}/api/assets${path}.json`;
+  // AEM Assets API expects path WITHOUT /content/dam/ prefix
+  // e.g., /content/dam/agentic-ai/en/my-cf → /api/assets/agentic-ai/en/my-cf.json
+  const assetPath = path.replace(/^\/content\/dam\//, '/');
+  const apiUrl = `${aemBase}/api/assets${assetPath}.json`;
 
   /* eslint-disable no-console */
   console.log('[Fragment] Fetching CF:', apiUrl);
