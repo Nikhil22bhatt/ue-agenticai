@@ -1,17 +1,40 @@
-/* suppress nested section padding */
-.fragment-wrapper > .section {
-  padding-left: 0;
-  padding-right: 0;
+/* Fragment Block — supports both page fragments and Content Fragments */
+
+/* Content Fragment rendering */
+.content-fragment {
+  padding: 1.5rem 0;
 }
 
-.fragment-wrapper > .section:first-of-type {
-  padding-top: 0;
+.cf-field {
+  margin-bottom: 1rem;
+  line-height: 1.6;
 }
 
-.fragment-wrapper > .section:last-of-type {
-  padding-bottom: 0;
+/* FAQ-specific styling (based on your FAQ CF model fields) */
+.cf-field-question {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.fragment.block {
+.cf-field-answer {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.cf-field-answer p {
+  margin: 0;
+}
+
+.cf-field-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #999;
+  margin-bottom: 0.25rem;
+}
+
+/* Hide sortOrder field — it's for ordering, not display */
+.cf-field-sortOrder {
   display: none;
 }
