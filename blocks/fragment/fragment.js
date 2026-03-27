@@ -2,6 +2,9 @@
  * Fragment Block
  * Include content on a page as a fragment.
  * Supports BOTH page fragments (.plain.html) AND Content Fragments (DAM).
+ *
+ * The fragment block model uses "aem-content" component for the reference field.
+ * EDS renders the reference as a link inside the block table structure.
  */
 import {
   decorateMain,
@@ -39,15 +42,68 @@ export async function loadFragment(path) {
 }
 
 /**
- * Builds the AEM author base URL from the current page location.
- * Works in Universal Editor (author domain) and falls back for other envs.
+ * Extracts the CF/page path from the block.
+ * The aem-content component renders references in several possible ways.
+ */
+function extractPath(block) {
+  // Method 1: <a> tag (most common for aem-content references)
+  const link = block.querySelector('a');
+  if (link) {
+    const href = link.getAttribute('href');
+    if (href) return decodeURIComponent(href);
+  }
+
+  // Method 2: All text content — look for a path pattern
+  const allText = block.textContent.trim();
+  // Match /content/dam/... or /Content/Dam/... pattern anywhere in text
+  const match = allText.match(/(\/[Cc]ontent\/[Dd]am\/[^\s]+)/);
+  if (match) return match[1];
+
+  // Method 3: Any path-like content
+  if (allText.startsWith('/')) return allText;
+
+  // Method 4: Check all nested elements for path text
+  const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+  while (node) {
+    const t = node.textContent.trim();
+    if (t.match(/(\/[Cc]ontent\/[Dd]am\/)/)) return t;
+    if (t.startsWith('/content/')) return t;
+    node = walker.nextNode();
+  }
+
+  return allText || null;
+}
+
+/**
+ * Normalizes path casing from Universal Editor.
+ */
+function normalizePath(rawPath) {
+  if (!rawPath) return null;
+  let p = rawPath.trim();
+  // Fix common UE capitalizations
+  p = p.replace(/\/Content\//g, '/content/');
+  p = p.replace(/\/Dam\//g, '/dam/');
+  p = p.replace(/\/Agentic-Ai\//g, '/agentic-ai/');
+  p = p.replace(/\/En\//g, '/en/');
+  p = p.replace(/\/Fr\//g, '/fr/');
+  // Remove any trailing whitespace or newlines
+  p = p.replace(/\s+/g, '').trim();
+  return p;
+}
+
+/**
+ * Builds the AEM base URL for API calls.
  */
 function getAemBase() {
   const { hostname, protocol } = window.location;
+  // Inside Universal Editor — the page is served from the author domain
   if (hostname.includes('adobeaemcloud.com')) {
+    // Extract the author hostname from the UE URL
+    // UE URL pattern: author-pXXXX-eXXXX.adobeaemcloud.com
     return `${protocol}//${hostname}`;
   }
-  // Fallback for EDS preview/live — update this to your author URL
+  // Fallback for EDS preview/live
   return 'https://author-p178403-e1883757.adobeaemcloud.com';
 }
 
@@ -58,29 +114,40 @@ async function fetchContentFragment(path) {
   const aemBase = getAemBase();
   const apiUrl = `${aemBase}/api/assets${path}.json`;
 
+  /* eslint-disable no-console */
+  console.log('[Fragment] Fetching CF:', apiUrl);
+
   try {
     const resp = await fetch(apiUrl, { credentials: 'include' });
-    if (resp.ok) return resp.json();
-    // eslint-disable-next-line no-console
-    console.warn(`CF fetch returned ${resp.status} for ${apiUrl}`);
+    console.log('[Fragment] Response status:', resp.status);
+    if (resp.ok) {
+      const data = await resp.json();
+      console.log('[Fragment] CF data received:', Object.keys(data));
+      return data;
+    }
+    console.warn(`[Fragment] CF fetch returned ${resp.status} for ${apiUrl}`);
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('CF fetch error:', e);
+    console.warn('[Fragment] CF fetch error:', e.message);
   }
+  /* eslint-enable no-console */
   return null;
 }
 
 /**
- * Renders Content Fragment fields as HTML based on detected model.
+ * Renders Content Fragment fields as HTML.
  */
 function renderContentFragment(data) {
   const container = document.createElement('div');
   container.className = 'content-fragment';
 
   const elements = data?.properties?.elements;
-  if (!elements) return null;
+  if (!elements) {
+    // eslint-disable-next-line no-console
+    console.warn('[Fragment] No elements found in CF data. Keys:', Object.keys(data?.properties || {}));
+    return null;
+  }
 
-  // FAQ model — has question + answer fields
+  // FAQ model — has question + answer
   if (elements.question && elements.answer) {
     container.classList.add('cf-faq');
 
@@ -104,7 +171,7 @@ function renderContentFragment(data) {
     return container;
   }
 
-  // Blog Post model — has title + body fields
+  // Blog Post model — has title + body
   if (elements.title && (elements.body || elements.main)) {
     container.classList.add('cf-blog');
 
@@ -121,7 +188,7 @@ function renderContentFragment(data) {
     return container;
   }
 
-  // Generic fallback — render all string/HTML fields
+  // Generic fallback
   Object.entries(elements).forEach(([key, el]) => {
     const v = el.value;
     if (v === undefined || v === null || v === '') return;
@@ -141,40 +208,26 @@ function renderContentFragment(data) {
 }
 
 /**
- * Normalizes the path from the Universal Editor.
- * The UE sometimes capitalizes paths like /Content/Dam/...
- */
-function normalizePath(rawPath) {
-  let p = rawPath.trim();
-  if (p.startsWith('/Content/')) {
-    p = p.replace(/^\/Content\//i, '/content/');
-  }
-  if (p.includes('/Dam/')) {
-    p = p.replace(/\/Dam\//i, '/dam/');
-  }
-  if (p.includes('/Agentic-Ai/')) {
-    p = p.replace(/\/Agentic-Ai\//i, '/agentic-ai/');
-  }
-  if (p.includes('/En/')) {
-    p = p.replace(/\/En\//i, '/en/');
-  }
-  return p;
-}
-
-/**
  * @param {Element} block
  */
 export default async function decorate(block) {
-  const link = block.querySelector('a');
-  const rawPath = link ? link.getAttribute('href') : block.textContent.trim();
+  /* eslint-disable no-console */
+  console.log('[Fragment] Block HTML:', block.innerHTML.substring(0, 300));
 
-  if (!rawPath) return;
+  const rawPath = extractPath(block);
+  console.log('[Fragment] Extracted path:', rawPath);
+
+  if (!rawPath) {
+    console.warn('[Fragment] No path found in block');
+    return;
+  }
 
   const path = normalizePath(rawPath);
+  console.log('[Fragment] Normalized path:', path);
+  /* eslint-enable no-console */
 
   // Content Fragment — path starts with /content/dam/
-  if (path.startsWith('/content/dam/')) {
-    // Clear the raw path text from the block
+  if (path && path.startsWith('/content/dam/')) {
     block.textContent = '';
     block.classList.add('cf-loading');
 
@@ -188,13 +241,10 @@ export default async function decorate(block) {
       }
     }
 
-    // Fetch or render failed
     block.classList.remove('cf-loading');
     block.innerHTML = '<p class="cf-error">Content fragment could not be loaded.</p>';
-    // eslint-disable-next-line no-console
-    console.error(`Fragment block: failed to load CF at ${path}`);
-  } else {
-    // Page Fragment — standard .plain.html approach
+  } else if (path) {
+    // Page Fragment — standard .plain.html
     const fragment = await loadFragment(path);
     if (fragment) {
       const fragmentSection = fragment.querySelector(':scope .section');
