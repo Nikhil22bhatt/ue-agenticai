@@ -1,8 +1,7 @@
 /*
  * Fragment Block
  * Include content on a page as a fragment.
- * Supports BOTH page fragments (.plain.html) and Content Fragments (DAM assets).
- * https://www.aem.live/developer/block-collection/fragment
+ * Supports BOTH page fragments (.plain.html) AND Content Fragments (DAM).
  */
 import {
   decorateMain,
@@ -13,9 +12,7 @@ import {
 } from '../../scripts/aem.js';
 
 /**
- * Loads a page fragment.
- * @param {string} path The path to the page fragment
- * @returns {Promise<HTMLElement>} The root element of the fragment
+ * Loads a page fragment (standard EDS behavior).
  */
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
@@ -23,15 +20,16 @@ export async function loadFragment(path) {
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
-
       const resetAttributeBase = (tag, attr) => {
         main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+          elem[attr] = new URL(
+            elem.getAttribute(attr),
+            new URL(path, window.location),
+          ).href;
         });
       };
       resetAttributeBase('img', 'src');
       resetAttributeBase('source', 'srcset');
-
       decorateMain(main);
       await loadSections(main);
       return main;
@@ -41,50 +39,126 @@ export async function loadFragment(path) {
 }
 
 /**
- * Loads a Content Fragment from the DAM via the AEM JSON endpoint.
- * @param {string} path The DAM path to the Content Fragment
- * @returns {Promise<HTMLElement|null>} Rendered HTML element or null
+ * Builds the AEM author base URL from the current page location.
+ * Works in Universal Editor (author domain) and falls back for other envs.
  */
-async function loadContentFragment(path) {
+function getAemBase() {
+  const { hostname, protocol } = window.location;
+  if (hostname.includes('adobeaemcloud.com')) {
+    return `${protocol}//${hostname}`;
+  }
+  // Fallback for EDS preview/live — update this to your author URL
+  return 'https://author-p178403-e1883757.adobeaemcloud.com';
+}
+
+/**
+ * Fetches Content Fragment data via AEM Assets HTTP API.
+ */
+async function fetchContentFragment(path) {
+  const aemBase = getAemBase();
+  const apiUrl = `${aemBase}/api/assets${path}.json`;
+
   try {
-    // Try the CF JSON endpoint (jcr:content/data.json)
-    const resp = await fetch(`${path}/jcr:content/data.json`);
-    if (!resp.ok) return null;
-
-    const data = await resp.json();
-
-    // Build a container with the CF fields
-    const container = document.createElement('div');
-    container.className = 'content-fragment';
-
-    // data can have a "master" variation or fields at root level
-    const fields = data.master || data;
-
-    Object.entries(fields).forEach(([key, value]) => {
-      // Skip JCR metadata fields
-      if (key.startsWith('jcr:') || key.startsWith('cq:') || key === 'sling:resourceType') return;
-
-      if (typeof value === 'string' && value.trim()) {
-        const field = document.createElement('div');
-        field.className = `cf-field cf-field-${key}`;
-        field.setAttribute('data-field', key);
-
-        // If the value contains HTML tags, render as HTML
-        if (value.includes('<') && value.includes('>')) {
-          field.innerHTML = value;
-        } else {
-          field.textContent = value;
-        }
-        container.append(field);
-      }
-    });
-
-    return container.children.length > 0 ? container : null;
+    const resp = await fetch(apiUrl, { credentials: 'include' });
+    if (resp.ok) return resp.json();
+    // eslint-disable-next-line no-console
+    console.warn(`CF fetch returned ${resp.status} for ${apiUrl}`);
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error('Error loading content fragment:', e);
-    return null;
+    console.warn('CF fetch error:', e);
   }
+  return null;
+}
+
+/**
+ * Renders Content Fragment fields as HTML based on detected model.
+ */
+function renderContentFragment(data) {
+  const container = document.createElement('div');
+  container.className = 'content-fragment';
+
+  const elements = data?.properties?.elements;
+  if (!elements) return null;
+
+  // FAQ model — has question + answer fields
+  if (elements.question && elements.answer) {
+    container.classList.add('cf-faq');
+
+    if (elements.category?.value) {
+      const cat = document.createElement('span');
+      cat.className = 'cf-category';
+      cat.textContent = elements.category.value;
+      container.append(cat);
+    }
+
+    const q = document.createElement('h3');
+    q.className = 'cf-question';
+    q.textContent = elements.question.value;
+    container.append(q);
+
+    const a = document.createElement('div');
+    a.className = 'cf-answer';
+    a.innerHTML = elements.answer.value;
+    container.append(a);
+
+    return container;
+  }
+
+  // Blog Post model — has title + body fields
+  if (elements.title && (elements.body || elements.main)) {
+    container.classList.add('cf-blog');
+
+    const title = document.createElement('h2');
+    title.className = 'cf-title';
+    title.textContent = elements.title.value;
+    container.append(title);
+
+    const body = document.createElement('div');
+    body.className = 'cf-body';
+    body.innerHTML = (elements.body || elements.main).value;
+    container.append(body);
+
+    return container;
+  }
+
+  // Generic fallback — render all string/HTML fields
+  Object.entries(elements).forEach(([key, el]) => {
+    const v = el.value;
+    if (v === undefined || v === null || v === '') return;
+    if (typeof v === 'number') return;
+
+    const field = document.createElement('div');
+    field.className = `cf-field cf-field-${key}`;
+    if (typeof v === 'string' && v.includes('<')) {
+      field.innerHTML = v;
+    } else if (typeof v === 'string') {
+      field.textContent = v;
+    }
+    container.append(field);
+  });
+
+  return container.children.length > 0 ? container : null;
+}
+
+/**
+ * Normalizes the path from the Universal Editor.
+ * The UE sometimes capitalizes paths like /Content/Dam/...
+ */
+function normalizePath(rawPath) {
+  let p = rawPath.trim();
+  if (p.startsWith('/Content/')) {
+    p = p.replace(/^\/Content\//i, '/content/');
+  }
+  if (p.includes('/Dam/')) {
+    p = p.replace(/\/Dam\//i, '/dam/');
+  }
+  if (p.includes('/Agentic-Ai/')) {
+    p = p.replace(/\/Agentic-Ai\//i, '/agentic-ai/');
+  }
+  if (p.includes('/En/')) {
+    p = p.replace(/\/En\//i, '/en/');
+  }
+  return p;
 }
 
 /**
@@ -92,20 +166,35 @@ async function loadContentFragment(path) {
  */
 export default async function decorate(block) {
   const link = block.querySelector('a');
-  const path = link ? link.getAttribute('href') : block.textContent.trim();
+  const rawPath = link ? link.getAttribute('href') : block.textContent.trim();
 
-  if (!path) return;
+  if (!rawPath) return;
 
-  // Determine if this is a Content Fragment (DAM path) or a page fragment
+  const path = normalizePath(rawPath);
+
+  // Content Fragment — path starts with /content/dam/
   if (path.startsWith('/content/dam/')) {
-    // Content Fragment — fetch structured data and render
-    const cfElement = await loadContentFragment(path);
-    if (cfElement) {
-      block.textContent = '';
-      block.append(cfElement);
+    // Clear the raw path text from the block
+    block.textContent = '';
+    block.classList.add('cf-loading');
+
+    const data = await fetchContentFragment(path);
+    if (data) {
+      const rendered = renderContentFragment(data);
+      if (rendered) {
+        block.classList.remove('cf-loading');
+        block.append(rendered);
+        return;
+      }
     }
+
+    // Fetch or render failed
+    block.classList.remove('cf-loading');
+    block.innerHTML = '<p class="cf-error">Content fragment could not be loaded.</p>';
+    // eslint-disable-next-line no-console
+    console.error(`Fragment block: failed to load CF at ${path}`);
   } else {
-    // Page Fragment — use the standard .plain.html approach
+    // Page Fragment — standard .plain.html approach
     const fragment = await loadFragment(path);
     if (fragment) {
       const fragmentSection = fragment.querySelector(':scope .section');
