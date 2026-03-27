@@ -1,40 +1,83 @@
-/* Fragment Block — supports both page fragments and Content Fragments */
+/* Fragment Block — Content Fragment + Page Fragment styles */
 
-/* Content Fragment rendering */
+.cf-loading {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-style: italic;
+}
+
+.cf-loading::before {
+  content: 'Loading content...';
+}
+
+.cf-error {
+  color: #f66;
+  font-style: italic;
+  padding: 1rem 0;
+}
+
+/* Content Fragment container */
 .content-fragment {
   padding: 1.5rem 0;
 }
 
-.cf-field {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-/* FAQ-specific styling (based on your FAQ CF model fields) */
-.cf-field-question {
-  font-size: 1.25rem;
-  font-weight: 600;
+/* FAQ Model */
+.cf-faq .cf-category {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #aaa;
   margin-bottom: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
 }
 
-.cf-field-answer {
+.cf-faq .cf-question {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0.75rem 0;
+  line-height: 1.3;
+}
+
+.cf-faq .cf-answer {
   font-size: 1rem;
+  line-height: 1.65;
   color: #ccc;
 }
 
-.cf-field-answer p {
+.cf-faq .cf-answer p {
   margin: 0;
 }
 
-.cf-field-category {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #999;
-  margin-bottom: 0.25rem;
+/* Blog Post Model */
+.cf-blog .cf-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  line-height: 1.2;
 }
 
-/* Hide sortOrder field — it's for ordering, not display */
-.cf-field-sortOrder {
-  display: none;
+.cf-blog .cf-body {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.cf-blog .cf-body h2,
+.cf-blog .cf-body h3 {
+  margin-top: 1.5rem;
+}
+
+.cf-blog .cf-body ul {
+  padding-left: 1.5rem;
+}
+
+/* Generic fallback */
+.cf-field {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
 }
