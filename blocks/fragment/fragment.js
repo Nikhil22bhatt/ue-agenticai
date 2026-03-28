@@ -71,7 +71,7 @@ function extractPath(block) {
  */
 function normalizePath(rawPath) {
   if (!rawPath) return null;
-  return rawPath
+  let p = rawPath
     .replace(/\/Content\//g, '/content/')
     .replace(/\/Dam\//g, '/dam/')
     .replace(/\/Agentic-Ai\//g, '/agentic-ai/')
@@ -79,6 +79,11 @@ function normalizePath(rawPath) {
     .replace(/\/Fr\//g, '/fr/')
     .replace(/\s+/g, '')
     .trim();
+  // DAM paths don't have .html — UE sometimes appends it via link rendering
+  if (p.startsWith('/content/dam/')) {
+    p = p.replace(/\.html$/, '');
+  }
+  return p;
 }
 
 /**
