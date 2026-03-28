@@ -42,15 +42,19 @@ export async function loadFragment(path) {
  * Extracts the CF/page path from the block.
  */
 function extractPath(block) {
+  // 1. Check for an anchor link
   const link = block.querySelector('a');
   if (link) {
     const href = link.getAttribute('href');
     if (href) return decodeURIComponent(href);
   }
+  // 2. Check text content for a /content/dam/ path
   const allText = block.textContent.trim();
   const match = allText.match(/(\/[Cc]ontent\/[Dd]am\/[^\s]+)/);
   if (match) return match[1];
-  if (allText.startsWith('/')) return allText;
+  // 3. Any /content/ path
+  if (allText.startsWith('/content/')) return allText;
+  // 4. Walk text nodes
   const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
   let node = walker.nextNode();
   while (node) {
@@ -78,63 +82,93 @@ function normalizePath(rawPath) {
 }
 
 /**
- * Fetches Content Fragment data via AEM CF Fragments API v2.
- * Endpoint: /adobe/sites/cf/fragments?path={path}
- * Returns fields as an array: [{ name, type, values, mimeType }]
+ * Tries a fetch and returns parsed JSON, or null on failure.
  */
-async function fetchContentFragment(path) {
-  const apiUrl = `/adobe/sites/cf/fragments?path=${encodeURIComponent(path)}&limit=1`;
-
-  /* eslint-disable no-console */
-  console.log('[Fragment] Fetching CF:', apiUrl);
-
+async function tryFetch(url, options = {}) {
   try {
-    const resp = await fetch(apiUrl, {
-      credentials: 'same-origin',
+    const resp = await fetch(url, {
+      credentials: 'include',
       headers: { Accept: 'application/json' },
+      ...options,
     });
-    console.log('[Fragment] Response status:', resp.status);
-    if (resp.ok) {
-      const data = await resp.json();
-      // API returns { items: [...] }
-      const item = data?.items?.[0] || data;
-      console.log('[Fragment] CF data received');
-      return item;
-    }
-    console.warn(`[Fragment] CF fetch returned ${resp.status}`);
+    // eslint-disable-next-line no-console
+    console.log(`[Fragment] ${url} → ${resp.status}`);
+    if (resp.ok) return resp.json();
   } catch (e) {
-    console.warn('[Fragment] CF fetch error:', e.message);
+    // eslint-disable-next-line no-console
+    console.warn(`[Fragment] fetch failed for ${url}:`, e.message);
   }
-  /* eslint-enable no-console */
   return null;
 }
 
 /**
- * Normalises CF API v2 fields array into a simple { name: { value, mimeType } } map.
- * CF API v2 returns: fields: [{ name, type, values: [...], mimeType }]
+ * Fetches Content Fragment data.
+ * Tries CF Fragments API v2 first, then Assets API v1 as fallback.
+ */
+async function fetchContentFragment(path) {
+  // --- Approach 1: CF Fragments API v2 (by UUID lookup via path) ---
+  const cfByPath = await tryFetch(
+    `/adobe/sites/cf/fragments?path=${encodeURIComponent(path)}&limit=1`,
+  );
+  if (cfByPath) {
+    // List endpoint returns { items: [...] }
+    const item = cfByPath?.items?.[0] ?? cfByPath;
+    if (item?.fields || item?.id) return item;
+  }
+
+  // --- Approach 2: Assets API v1 ---
+  // Strip /content/dam/ prefix: /content/dam/foo/bar → /foo/bar
+  const assetPath = path.replace(/^\/content\/dam/, '');
+  const assetsData = await tryFetch(`/api/assets${assetPath}.json`);
+  if (assetsData) return assetsData;
+
+  // eslint-disable-next-line no-console
+  console.warn('[Fragment] All fetch attempts failed for', path);
+  return null;
+}
+
+/**
+ * Normalises response into a simple { fieldName: { value, mimeType } } map.
+ * Handles:
+ *  - CF API v2: { fields: [{ name, values, mimeType }] }
+ *  - Assets API v1: { properties: { elements: { name: { value } } } }
  */
 function normaliseFields(data) {
-  // CF API v2 format — fields is an array
-  if (Array.isArray(data?.fields)) {
+  if (!data) return null;
+
+  // CF API v2 — fields array
+  if (Array.isArray(data.fields)) {
     return Object.fromEntries(
       data.fields.map((f) => [f.name, { value: f.values?.[0], mimeType: f.mimeType }]),
     );
   }
-  // Assets API v1 format — fields under properties.elements or elements
-  return data?.properties?.elements || data?.elements || null;
+
+  // Assets API v1 — properties.elements
+  if (data.properties?.elements) return data.properties.elements;
+
+  // Elements at root
+  if (data.elements) return data.elements;
+
+  return null;
 }
 
 /**
  * Renders Content Fragment fields as HTML.
  */
 function renderContentFragment(data) {
+  // eslint-disable-next-line no-console
+  console.log('[Fragment] Raw CF data:', JSON.stringify(data).substring(0, 300));
+
   const container = document.createElement('div');
   container.className = 'content-fragment';
 
   const els = normaliseFields(data);
+  // eslint-disable-next-line no-console
+  console.log('[Fragment] Normalised fields:', els ? Object.keys(els) : null);
+
   if (!els) return null;
 
-  // FAQ model — has question + answer
+  // FAQ model — question + answer
   if (els.question && els.answer) {
     container.classList.add('cf-faq');
 
@@ -159,7 +193,7 @@ function renderContentFragment(data) {
     return container;
   }
 
-  // Blog Post model — has title + body
+  // Blog model — title + body/main
   if (els.title && (els.body || els.main)) {
     container.classList.add('cf-blog');
 
@@ -178,7 +212,7 @@ function renderContentFragment(data) {
 
   // Generic fallback — render all string/HTML fields
   Object.entries(els).forEach(([key, el]) => {
-    const v = el.value;
+    const v = el?.value;
     if (v === undefined || v === null || v === '') return;
     if (typeof v === 'number') return;
 
@@ -200,13 +234,13 @@ function renderContentFragment(data) {
  */
 export default async function decorate(block) {
   /* eslint-disable no-console */
-  console.log('[Fragment] Block innerHTML:', block.innerHTML.substring(0, 200));
+  console.log('[Fragment] Block innerHTML:', block.innerHTML.substring(0, 300));
 
   const rawPath = extractPath(block);
   console.log('[Fragment] Extracted path:', rawPath);
 
   if (!rawPath) {
-    console.warn('[Fragment] No path found');
+    console.warn('[Fragment] No path found in block');
     return;
   }
 
@@ -214,7 +248,7 @@ export default async function decorate(block) {
   console.log('[Fragment] Normalized path:', path);
   /* eslint-enable no-console */
 
-  // Content Fragment — lives under /content/dam/
+  // Content Fragment — path under /content/dam/
   if (path && path.startsWith('/content/dam/')) {
     block.textContent = '';
     block.classList.add('cf-loading');
