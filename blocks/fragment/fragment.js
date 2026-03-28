@@ -78,29 +78,28 @@ function normalizePath(rawPath) {
 }
 
 /**
- * Fetches Content Fragment data via AEM Assets HTTP API.
- * 
- * PROVEN URL FORMAT (tested in browser):
- * https://author-p178403-e1883757.adobeaemcloud.com/api/assets/agentic-ai/en/what-services-does-tata-elxsi-offer-.json
- * 
- * The /content/dam/ prefix must be STRIPPED from the path.
+ * Fetches Content Fragment data via AEM CF Fragments API v2.
+ * Endpoint: /adobe/sites/cf/fragments?path={path}
+ * Returns fields as an array: [{ name, type, values, mimeType }]
  */
 async function fetchContentFragment(path) {
-  // Strip /content/dam/ prefix — the Assets API doesn't use it
-  // /content/dam/agentic-ai/en/my-cf → /agentic-ai/en/my-cf
-  const assetPath = path.replace(/^\/content\/dam/, '');
-  const apiUrl = `/api/assets${assetPath}.json`;
+  const apiUrl = `/adobe/sites/cf/fragments?path=${encodeURIComponent(path)}&limit=1`;
 
   /* eslint-disable no-console */
   console.log('[Fragment] Fetching CF:', apiUrl);
 
   try {
-    const resp = await fetch(apiUrl, { credentials: 'same-origin' });
+    const resp = await fetch(apiUrl, {
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json' },
+    });
     console.log('[Fragment] Response status:', resp.status);
     if (resp.ok) {
       const data = await resp.json();
+      // API returns { items: [...] }
+      const item = data?.items?.[0] || data;
       console.log('[Fragment] CF data received');
-      return data;
+      return item;
     }
     console.warn(`[Fragment] CF fetch returned ${resp.status}`);
   } catch (e) {
@@ -111,17 +110,28 @@ async function fetchContentFragment(path) {
 }
 
 /**
+ * Normalises CF API v2 fields array into a simple { name: { value, mimeType } } map.
+ * CF API v2 returns: fields: [{ name, type, values: [...], mimeType }]
+ */
+function normaliseFields(data) {
+  // CF API v2 format — fields is an array
+  if (Array.isArray(data?.fields)) {
+    return Object.fromEntries(
+      data.fields.map((f) => [f.name, { value: f.values?.[0], mimeType: f.mimeType }]),
+    );
+  }
+  // Assets API v1 format — fields under properties.elements or elements
+  return data?.properties?.elements || data?.elements || null;
+}
+
+/**
  * Renders Content Fragment fields as HTML.
  */
 function renderContentFragment(data) {
   const container = document.createElement('div');
   container.className = 'content-fragment';
 
-  // Assets API returns fields under properties.elements
-  const elements = data?.properties?.elements;
-
-  // Also handle the alternate format where elements is at root
-  const els = elements || data?.elements;
+  const els = normaliseFields(data);
   if (!els) return null;
 
   // FAQ model — has question + answer
