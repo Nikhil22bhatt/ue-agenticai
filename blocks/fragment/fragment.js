@@ -87,6 +87,16 @@ function normalizePath(rawPath) {
 }
 
 /**
+ * Returns the AEM author base URL.
+ * On author (adobeaemcloud.com) relative URLs work fine — return empty string.
+ * On live/preview (aem.page / aem.live) use the aem-host meta tag.
+ */
+function getAemBase() {
+  if (window.location.hostname.includes('adobeaemcloud.com')) return '';
+  return document.querySelector('meta[name="aem-host"]')?.content || '';
+}
+
+/**
  * Tries a fetch and returns parsed JSON, or null on failure.
  */
 async function tryFetch(url, options = {}) {
@@ -111,20 +121,20 @@ async function tryFetch(url, options = {}) {
  * Tries CF Fragments API v2 first, then Assets API v1 as fallback.
  */
 async function fetchContentFragment(path) {
-  // --- Approach 1: CF Fragments API v2 (by UUID lookup via path) ---
+  const base = getAemBase();
+
+  // --- Approach 1: CF Fragments API v2 ---
   const cfByPath = await tryFetch(
-    `/adobe/sites/cf/fragments?path=${encodeURIComponent(path)}&limit=1`,
+    `${base}/adobe/sites/cf/fragments?path=${encodeURIComponent(path)}&limit=1`,
   );
   if (cfByPath) {
-    // List endpoint returns { items: [...] }
     const item = cfByPath?.items?.[0] ?? cfByPath;
     if (item?.fields || item?.id) return item;
   }
 
   // --- Approach 2: Assets API v1 ---
-  // Strip /content/dam/ prefix: /content/dam/foo/bar → /foo/bar
   const assetPath = path.replace(/^\/content\/dam/, '');
-  const assetsData = await tryFetch(`/api/assets${assetPath}.json`);
+  const assetsData = await tryFetch(`${base}/api/assets${assetPath}.json`);
   if (assetsData) return assetsData;
 
   // eslint-disable-next-line no-console
