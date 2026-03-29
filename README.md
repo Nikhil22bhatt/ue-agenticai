@@ -5,6 +5,8 @@ Your project's description...
 - Preview: https://main--{repo}--{owner}.aem.page/
 - Live: https://main--{repo}--{owner}.aem.live/
 
+- FR : https://main--ue-agenticai--nikhil22bhatt.aem.live/fr/
+
 ## Documentation
 
 Before using the aem-block-collection, we recommand you to go through the documentation on https://www.aem.live/docs/ and more specifically:
