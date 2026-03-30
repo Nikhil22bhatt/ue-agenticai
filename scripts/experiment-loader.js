@@ -6,21 +6,28 @@ const isExperimentationEnabled = () => document.head.querySelector('[name^="expe
   || [...document.querySelectorAll('.section-metadata div')].some((d) => d.textContent.match(/Experiment|Campaign|Audience/i));
 
 /**
+ * Register the config reply listener immediately at module load time.
+ * The A/B extension sends hlx:experimentation-get-config as soon as the
+ * panel opens — before runExperimentation() is called — so we must listen
+ * from the very start to avoid the race condition.
+ */
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'hlx:experimentation-get-config' && !isExperimentationEnabled()) {
+    event.source.postMessage({
+      type: 'hlx:experimentation-config',
+      config: { experiments: [], audiences: [], campaigns: [] },
+      source: 'no-experiments',
+    }, '*');
+  }
+});
+
+/**
  * Loads the experimentation module (eager).
- * @param {Document} document The document object.
+ * @param {Document} doc The document object.
  * @returns {Promise<void>} A promise that resolves when the experimentation module is loaded.
  */
-export async function runExperimentation(document, config) {
+export async function runExperimentation(doc, config) {
   if (!isExperimentationEnabled()) {
-    window.addEventListener('message', async (event) => {
-      if (event.data?.type === 'hlx:experimentation-get-config') {
-        event.source.postMessage({
-          type: 'hlx:experimentation-config',
-          config: { experiments: [], audiences: [], campaigns: [] },
-          source: 'no-experiments',
-        }, '*');
-      }
-    });
     return null;
   }
 
@@ -29,7 +36,7 @@ export async function runExperimentation(document, config) {
       // eslint-disable-next-line import/no-relative-packages
       '../plugins/experimentation/src/index.js'
     );
-    return loadEager(document, config);
+    return loadEager(doc, config);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to load experimentation module (eager):', error);
@@ -39,10 +46,10 @@ export async function runExperimentation(document, config) {
 
 /**
  * Loads the experimentation module (lazy).
- * @param {Document} document The document object.
+ * @param {Document} doc The document object.
  * @returns {Promise<void>} A promise that resolves when the experimentation module is loaded.
  */
-export async function showExperimentationRail(document, config) {
+export async function showExperimentationRail(doc, config) {
   if (!isExperimentationEnabled()) {
     return null;
   }
@@ -52,15 +59,15 @@ export async function showExperimentationRail(document, config) {
       // eslint-disable-next-line import/no-relative-packages
       '../plugins/experimentation/src/index.js'
     );
-    await loadLazy(document, config);
+    await loadLazy(doc, config);
 
     const loadSidekickHandler = () => import('../tools/sidekick/aem-experimentation.js');
 
-    if (document.querySelector('helix-sidekick, aem-sidekick')) {
+    if (doc.querySelector('helix-sidekick, aem-sidekick')) {
       await loadSidekickHandler();
     } else {
       await new Promise((resolve) => {
-        document.addEventListener(
+        doc.addEventListener(
           'sidekick-ready',
           () => loadSidekickHandler().then(resolve),
           { once: true },
