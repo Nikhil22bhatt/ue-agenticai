@@ -1,5 +1,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="aem-host" content="https://author-p178403-e1883757.adobeaemcloud.com"/>
+<script>
+  // Register immediately (sync, before any deferred/module scripts) so the
+  // A/B experimentation extension always gets a response, even if it fires
+  // before ES modules have loaded.
+  window.addEventListener('message', function onExperimentationConfig(event) {
+    if (event.data && event.data.type === 'hlx:experimentation-get-config' && event.source) {
+      event.source.postMessage({
+        type: 'hlx:experimentation-config',
+        config: { experiments: [], audiences: [], campaigns: [] },
+        source: 'no-experiments',
+      }, '*');
+    }
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script src="/scripts/aem.js" type="module"></script>
