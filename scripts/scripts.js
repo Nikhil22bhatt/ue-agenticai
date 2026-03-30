@@ -14,6 +14,14 @@ import {
 } from './aem.js';
 import { runExperimentation, showExperimentationRail } from './experiment-loader.js';
 
+const experimentationConfig = {
+  prodHost: 'www.tataelxsi.com',
+  audiences: {
+    mobile: () => window.innerWidth < 600,
+    desktop: () => window.innerWidth >= 600,
+  },
+};
+
 /**
  * Moves all the attributes from a given elmenet to another given element.
  * @param {Element} from the element to copy attributes from
@@ -119,7 +127,7 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
-  await runExperimentation(doc, {});
+  await runExperimentation(doc, experimentationConfig);
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     doc.body.dataset.breadcrumbs = true;
   }
@@ -149,7 +157,7 @@ async function loadLazy(doc) {
 
   const main = doc.querySelector('main');
   await loadSections(main);
-  await showExperimentationRail(doc, {});
+  await showExperimentationRail(doc, experimentationConfig);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
